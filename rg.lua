@@ -22,7 +22,7 @@ function rg(bp, args)
 	if output ~= "" then
 		local buf, err = buffer.NewBuffer(output, "rg")
 	    if err == nil then
-	    	micro.CurPane():VSplitIndex(buffer.NewBuffer(output, "filemanager"), false)
+	    	micro.CurPane():VSplitIndex(buf, false)
 	    	rg_view = micro.CurPane()
 	    	rg_view:ResizePane(30)
 	    	--rg_view.Buf.Type.Scratch = true
