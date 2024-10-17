@@ -4,6 +4,9 @@ local micro = import("micro")
 local shell = import("micro/shell")
 local config = import("micro/config")
 local buffer = import("micro/buffer")
+local os = import("os")
+
+local rg_view = nil
 
 function rg(bp, args)
 	local cmd = "rg -l "
@@ -15,40 +18,18 @@ function rg(bp, args)
 
 	cmd = cmd .. pattern
 	
-    local output, err = shell.RunCommand(cmd)
-    
-    local strings = import("strings")
-    local input = strings.Split(output, "\n")
-
-	if #input < 2 then
-		micro.InfoBar():Error("bad input format: ", input)
-		return
-	end
-
-	-- micro.InfoBar():Message(input[1] .. " @ " .. input[2])
-	for line = 1, #input do
-		rgOpenLine(tostring(input[line]), bp, line)
-	end
-end
-
-
---function rgOpenLine(output, bp, line)
-function rgOpenLine(output, bp, line)
-    local strings = import("strings") 
-    local strconv = import("strconv")
-    file = strings.TrimSpace(output)
-
-	if file ~= "" then
-		--local buf, err = buffer.NewBufferFromFile(file)
-
-		if err ~= nil then
-			micro.InfoBar():Error(err)
-		end
-
-		local new_bp = bp:VSplitBuf(buf)
-
-		--new_bp.Cursor.Y = tonumber(line)-1
-		--new_bp.Cursor:Relocate()
+        local output, err = shell.RunCommand(cmd)
+        
+	if output ~= "" then
+	    local buf, err = buffer.NewBuffer(output, "/")
+	    if err == nil then
+	    	micro.CurPane():VSplitIndex(buffer.NewBuffer("", "rg"), false)
+	    	rg_view = micro.CurPane()
+	    	rg_view:ResizePane(30)
+	    	rg_view.Buf.Type.Scratch = true
+	    	rg_view.Buf.Type.Readonly = true
+	    	rg_view:VSplitBuf(buf)
+	    end
 	end
 end
 
