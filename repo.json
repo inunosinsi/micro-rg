@@ -1,18 +1,10 @@
 [
     {
-        "Name": "rg",
+        "Name": "micro-rg-fzf",
         "Description": "",
         "Website": "",
-        "Tags": ["rg"],
-        "Versions": [
-            {
-                "Version": "1.1.1",
-                "Url": "https://github.com/micro-editor/updated-plugins/releases/download/v1.0.0/fzf-1.1.1.zip",
-                "Require": {
-                    "micro": ">=2.0.0-1"
-                }
-            }
-        ]
+        "Tags": ["rg", "fzf"],
+        "Versions": []
     }
 ]
 
