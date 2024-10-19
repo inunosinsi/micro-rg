@@ -2,4 +2,4 @@
 ## Intall  
 
 ## Usage
-> rg PATTERN
+&gt; rg PATTERN
