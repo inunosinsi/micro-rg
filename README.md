@@ -1,1 +1,5 @@
-# micro-rg-fzf
+# micro-rg-fzf  
+## Intall  
+
+## Usage
+> rg PATTERN
