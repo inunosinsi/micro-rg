@@ -5,30 +5,35 @@ local shell = import("micro/shell")
 local config = import("micro/config")
 local buffer = import("micro/buffer")
 
-local rg_view = nil
-
 function rg(bp, args)
-	local cmd = "rg -l "
+	local cmd = "sh -c 'rg -l "
 	local pattern = ""
 	
 	for i = 1, #args do
 		pattern = args[i] .. " "
 	end
 
-	cmd = cmd .. pattern
-	
-    local output, err = shell.RunCommand(cmd)
-    
-	if output ~= "" then
-		local buf, err = buffer.NewBuffer(output, "rg")
-	    if err == nil then
-	    	micro.CurPane():VSplitIndex(buf, false)
-	    	rg_view = micro.CurPane()
-	    	rg_view:ResizePane(30)
-	    	--rg_view.Buf.Type.Scratch = true
-	    	rg_view.Buf.Type.Readonly = true
-	    end
-	end
+	cmd = cmd .. pattern .. "| fzf'"
+
+	local output, err = shell.RunInteractiveShell(cmd, false, true)
+    if err ~= nil then
+    	micro.InfoBar():Error(err)
+    else
+        fzfOutput(output, {bp})
+    end
+end
+
+function fzfOutput(output, args)
+    local bp = args[1]
+    local strings = import("strings")
+    output = strings.TrimSpace(output)
+    print(output)
+    if output ~= "" then
+        local buf, err = buffer.NewBufferFromFile(output)
+        if err == nil then
+            bp:OpenBuffer(buf)
+        end
+    end
 end
 
 function init()
